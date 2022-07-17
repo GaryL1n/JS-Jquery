@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Horse</title>
+        <link rel="icon" href="./imgs/horseBG.ico">
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+            integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+            integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="./btn-sample.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Lato&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            body{
+                background: url(./imgs/body.jpg) center center/cover;
+                background-attachment: fixed;
+            }
+
+            .wrap {
+                width: 800px;
+                height: 780px;
+                background: url(./imgs/greenBg.jpg) center center/cover;
+                border: 1px solid black;
+                position: relative;
+            }
+
+            #horse {
+                width: 187px;
+                height: 130px;
+                background: url('./imgs/movehorse.gif');
+                background-position: -40px -55px;
+                position: absolute;
+            }
+
+            .die {
+                width: 130px;
+                position: absolute;
+                left: 670px;
+                transition: 0.3s linear;
+                display: none;
+            }
+
+            .startBg {
+                background: url('./imgs/horseBG.png') center center/cover;
+                width: 800px;
+                height: 780px;
+                position: absolute;
+                z-index: 2;
+                opacity: 1;
+            }
+
+            .over {
+                background: url('./imgs/gameover.jpg') center center/cover;
+                width: 800px;
+                height: 780px;
+                position: absolute;
+                z-index: 1;
+                opacity: 0;
+            }
+
+            p {
+                color: white;
+                font-size: 30px;
+                font-weight: 600;
+                margin: 0;
+                opacity: 0;
+            }
+
+            span {
+                color: rgb(248, 97, 97);
+                font-size: 30px;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <p class="timeP mt-2 mb-2">已存活<span class="time"></span>秒</p>
+        <div class="wrap mx-auto">
+            <div
+                class="startBg mx-auto d-flex justify-content-center align-items-center"
+            >
+                <button class="custom-btn btn-12">
+                    <span>Go!</span><span>Start</span>
+                </button>
+            </div>
+            <div id="horse"></div>
+            <div class="die">
+                <img class="w-100" src="./imgs/die.png" alt="" />
+            </div>
+            <div class="over">
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script>
+            // 一次移動多少
+            const speed = 130;
+            // 設定移動函式
+            function move(cssName, direction) {
+                $('#horse').css(cssName, `${direction}${speed}`);
+            }
+
+            // 設定按鍵觸發
+            $(document).on('keydown', function (e) {
+                // console.log('keydown', e.keyCode);
+
+                // 往下
+                if (e.keyCode === 83) {
+                    if (parseInt($('#horse').css('top')) < 650) {
+                        move('top', '+=');
+                    }
+                }
+
+                // 往上
+                if (e.keyCode === 87) {
+                    if (parseInt($('#horse').css('top')) > 0) {
+                        move('top', '-=');
+                    }
+                }
+            });
+
+            // 開始按鈕
+            const startBt = document.querySelector('.custom-btn');
+            const wrap = document.querySelector('.wrap');
+
+            // 按鈕觸發後才開始遊戲
+            startBt.addEventListener('click', () => {
+                // 把遊戲區塊浮顯現 其他消失
+                startBt.style.display = 'none';
+                $('.startBg').css('opacity', '0');
+                $('.timeP').css('opacity', '1');
+
+                // 計算存活時間
+                const time = document.querySelector('.time');
+                const startTime = new Date();
+
+                // 顯示給User 每0.5秒更新一次
+                const doRun = () => {
+                    let nowTime = new Date();
+                    let yourTime = Math.round((nowTime - startTime) / 1000);
+                    // console.log(yourTime);
+                    time.innerText = `${yourTime}`;
+                    setTimeout(doRun, 500);
+                };
+                doRun();
+
+                setInterval(() => {
+                    // 複製箭
+                    const copy = document.querySelector('.die').cloneNode(true);
+                    copy.style.display = 'block';
+                    // 箭會出現的高度 top 設定成陣列
+                    let topArray = [0, 130, 260, 390, 520, 650];
+
+                    // 打亂陣列順序的函式
+                    function randomsort(a, b) {
+                        return Math.random() > 0.5 ? -1 : 1;
+                        // 用Math.random()函式生成0~1之間的隨機數與0.5比較，返回-1或1
+                    }
+
+                    // 將高度陣列隨機打亂
+                    topArray.sort(randomsort);
+                    // 每次生出來的top將不會照陣列順序
+                    for (let v of topArray) {
+                        copy.style.top = v + 'px';
+                    }
+
+                    // wrap製造copy(箭)
+                    wrap.appendChild(copy);
+                    copy.classList.add('copy');
+                    // 箭往馬的方向射
+                    setInterval(() => {
+                        $('.copy').css('left', '-=100px');
+                    }, 100);
+
+                    // 如果馬被射中(top跟left計算) 遊戲結束
+                    $('.copy').each((copyInd, copyEl) => {
+                        if (
+                            parseInt($(copyEl).css('left')) -
+                                parseInt($('#horse').css('left')) <
+                                165 &&
+                            parseInt($(copyEl).css('top')) ===
+                                parseInt($('#horse').css('top'))
+                        ) {
+                            $('.timeP').css('opacity', '0');
+                            $('.over').css('opacity', '1');
+                        }
+                    });
+
+                    // 箭到一定left後從畫面上移除
+                    if (parseInt($('.copy').css('left')) < 130) {
+                        $('.copy').first().remove();
+                    }
+                }, 400);
+            });
+        </script>
+    </body>
+</html>

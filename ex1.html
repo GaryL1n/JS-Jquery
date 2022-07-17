@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ex1</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+            integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+            crossorigin="anonymous"
+        />
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="product-demo d-flex justify-content-center">
+                        <img src="./imgs/product1.jpg" alt="" />
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="img-wrap d-flex">
+                        <div class="img-row">
+                            <img
+                                src="./imgs/product1.jpg"
+                                alt=""
+                                class="w-100"
+                            />
+                        </div>
+                        <div class="img-row">
+                            <img
+                                src="./imgs/product2.jpg"
+                                alt=""
+                                class="w-100"
+                            />
+                        </div>
+                        <div class="img-row">
+                            <img
+                                src="./imgs/product3.jpg"
+                                alt=""
+                                class="w-100"
+                            />
+                        </div>
+                        <div class="img-row">
+                            <img
+                                src="./imgs/product4.jpg"
+                                alt=""
+                                class="w-100"
+                            />
+                        </div>
+                        <div class="img-row">
+                            <img
+                                src="./imgs/product5.jpg"
+                                alt=""
+                                class="w-100"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            //取得照片區的BOX
+            const imgWrap = document.querySelector('.img-wrap');
+            // console.log(img);
+            imgWrap.addEventListener('click', (e) => {
+                const bigimg = document.querySelector('.product-demo img');
+                // console.log(e.target);
+                //大照片的路徑變成事件觸發的路徑
+                bigimg.src = e.target.src;
+            });
+        </script>
+    </body>
+</html>
